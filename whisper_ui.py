@@ -1,6 +1,3 @@
-import os
-os.environ["OMP_NUM_THREADS"] = "6"
-
 import sys
 import io
 
