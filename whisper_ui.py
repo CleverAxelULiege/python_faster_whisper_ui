@@ -1,3 +1,7 @@
+import faster_whisper, os
+assets_path = os.path.join(os.path.dirname(faster_whisper.__file__), 'assets')
+print(assets_path)
+
 import sys
 import io
 
