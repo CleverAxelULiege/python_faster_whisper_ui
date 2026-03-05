@@ -56,7 +56,7 @@ class WhisperUIService:
             model_path,
             device="cpu",
             compute_type="int8",
-            cpu_threads=  int(cpu_count / 2) if cpu_count != None else 4,
+            cpu_threads=  int(cpu_count * 0.75) if cpu_count != None else 4,
             num_workers=2
         )
 
