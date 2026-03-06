@@ -4,6 +4,7 @@ import logging
 from datetime import timedelta
 import librosa
 import os
+import tempfile
 
 from faster_whisper import WhisperModel
 
@@ -21,8 +22,9 @@ class WhisperUIService:
 
         print("Device : cpu")
 
+        log_path = os.path.join(tempfile.gettempdir(), "app_whisper_ui.log")
         logging.basicConfig(
-            filename="app.log",
+            filename=log_path,
             level=logging.ERROR,
             format="%(asctime)s - %(levelname)s - %(message)s",
         )
