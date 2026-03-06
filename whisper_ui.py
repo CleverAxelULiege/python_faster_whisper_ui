@@ -63,6 +63,8 @@ class WhisperUI:
         self.input.load_config(config_path)
 
         self.progress_bar = ttk.Progressbar(master=self.root, mode="determinate")
+        self.progress_frame = ttk.Frame(self.root)
+        self.progress_label = Label(self.progress_frame, text="100%")
         self.submit_button = Button()
         self.timestamp_checkbox = ttk.Checkbutton()
 
@@ -83,6 +85,7 @@ class WhisperUI:
         if(evt.state == 0):
             print(str(self.progress_bar_status["percentage_done"]) + "%")
             self.input.progress.set(self.progress_bar_status["percentage_done"])
+            self.progress_label.config(text=f"{self.input.progress.get()}%")
         elif(evt.state == 1):
             messagebox.showerror(title="Une erreur est survenue", message="Une erreur est survenue. Merci de regarder le terminal pour voir ce qu'il s'est paassé.")
         # self.progress_bar.set(self.progress_bar_status["percentage_done"])
@@ -162,14 +165,17 @@ class WhisperUI:
         label.pack(side="top", anchor="nw", expand=False, padx=2, pady=(0, 0))
 
     def __place_progress_bar(self):
-        self.progress_bar = ttk.Progressbar(self.root, mode="determinate", length=300, variable=self.input.progress)
+        self.progress_frame.pack(side="top")
+        self.progress_bar = ttk.Progressbar(self.progress_frame, mode="determinate", length=300, variable=self.input.progress)
         self.__show_progress_bar()
 
     def __hide_progress_bar(self):
         self.progress_bar.pack_forget()
+        self.progress_label.pack_forget()
 
     def __show_progress_bar(self):
         self.progress_bar.pack()
+        self.progress_label.pack()
 
     def __select_save_directory(self):
         path = filedialog.askdirectory()
@@ -243,8 +249,6 @@ class WhisperUI:
         title="Sélectionner un fichier",
             filetypes=[
                 ("Fichier audio", "*.wav *.mp3 *.m4a *.flac *.ogg *.aac *.wma"),
-                # ("Fichier vidéo", "*.mp4 *.mkv *.webm"),
-                # ("Tous les fichiers", "*.*")
             ]
         )
         if path:
@@ -306,10 +310,11 @@ class WhisperUI:
         self.__disable_submit_button()
         self.__disable_checkbox_timestamp()
         self.__show_progress_bar()
+
         
         self.service.setModel(model_choosen)
-        # self.service.model_id = model_choosen
         self.start_time = time.time()
+        self.progress_label.config(text=f"{0}%")
         self.service.transcribe(self.__transcribe_on_finish, lng, self.input.save_transcript_file_full_path.get(), self.input.should_add_timestamp.get(), self.input.transcript_quality.get())
 
     def __transcribe_on_finish(self, result):
@@ -317,14 +322,13 @@ class WhisperUI:
         
         self.__enable_checkbox_timestamp()
         self.__enable_submit_button()
-        # self.service.write_transcription(result=result, file_path=self.input.save_transcript_file_full_path.get(), should_add_timestamp=self.input.should_add_timestamp.get())
         self.input.progress.set(100)
-        self.should_open_dir = messagebox.askyesno(title="Transcription terminée !", message="Transcription terminée.\nVoulez ouvrir le dossier où se trouver votre fichier ?")
+        self.progress_label.config(text=f"{100}%")
+        elapsed = int(self.end_time - self.start_time)
+        self.should_open_dir = messagebox.askyesno(title="Transcription terminée !", message=f"Transcription terminée, cela a pris : {elapsed} secondes.\nVoulez ouvrir le dossier où se trouver votre fichier ?")
         if(self.should_open_dir):
             filedialog.askopenfile(initialdir=self.input.save_directory_path.get(), title="Dossier")
 
-        elapsed = self.end_time - self.start_time
-        print(f"A pris : {elapsed:.2f} secondes")
         
     def __init_root(self):
         self.root.title("Whisper UI")
