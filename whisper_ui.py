@@ -267,6 +267,16 @@ class WhisperUI:
         )
         self.timestamp_checkbox.pack(side="left", padx=5)
 
+        style = ttk.Style()
+        style.configure("Custom.TCheckbutton", font=("Arial", 8))
+        self.timestamp_checkbox = ttk.Checkbutton(
+            button_frame,
+            text="VAD (Voice audio detection) Doit être désactivé si\nl'audio est fortement pollué par des bruits de fond.\n(affecte la performance si décoché)",
+            variable=self.input.should_enable_vad,
+            style="Custom.TCheckbutton"
+        )
+        self.timestamp_checkbox.pack(side="left", padx=5)
+
         self.submit_button = ttk.Button(
             button_frame,
             text="Transcrire le fichier audio",
@@ -315,7 +325,7 @@ class WhisperUI:
         self.service.setModel(model_choosen)
         self.start_time = time.time()
         self.progress_label.config(text=f"{0}%")
-        self.service.transcribe(self.__transcribe_on_finish, lng, self.input.save_transcript_file_full_path.get(), self.input.should_add_timestamp.get(), self.input.transcript_quality.get())
+        self.service.transcribe(self.__transcribe_on_finish, lng, self.input.save_transcript_file_full_path.get(), self.input.should_add_timestamp.get(), self.input.transcript_quality.get(), self.input.should_enable_vad.get())
 
     def __transcribe_on_finish(self, result):
         self.end_time = time.time()
@@ -332,7 +342,7 @@ class WhisperUI:
         
     def __init_root(self):
         self.root.title("Whisper UI")
-        self.root.geometry("640x600")
+        self.root.geometry("640x620")
         self.root.resizable(False, False)
 
     def start(self):

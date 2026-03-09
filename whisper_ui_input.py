@@ -40,6 +40,7 @@ class WhisperUIInput:
         self.audio_file_path = tk.StringVar(master=root)
         self.language = tk.StringVar(master=root)
         self.should_add_timestamp = tk.BooleanVar(master=root, value=False)
+        self.should_enable_vad = tk.BooleanVar(master=root, value=True)
         self.transcript_quality_list = ("Rapide (moins précis)", "Équilibré (recommandé)", "Précis (plus lent)")
         self.transcript_quality = tk.StringVar(master=root, value=self.transcript_quality_list[0])
 

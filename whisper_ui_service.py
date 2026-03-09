@@ -63,17 +63,17 @@ class WhisperUIService:
         )
 
 
-    def transcribe(self, on_finish, language, output_file, should_add_timestamp, transcription_quality):
+    def transcribe(self, on_finish, language, output_file, should_add_timestamp, transcription_quality, should_enable_vad):
         beam_size = self.transcript_quality_beam_size[transcription_quality]
         t = threading.Thread(
             target=self.__thread,
             daemon=True,
-            args=(on_finish, language, output_file, should_add_timestamp, beam_size),
+            args=(on_finish, language, output_file, should_add_timestamp, beam_size, should_enable_vad),
         )
         t.start()
 
 
-    def __thread(self, on_finish, language, output_file, should_add_timestamp, beam_size):
+    def __thread(self, on_finish, language, output_file, should_add_timestamp, beam_size, should_enable_vad):
         try:
             # get audio duration for progress tracking
             audio, sr = librosa.load(self.audio_path, sr=None)
@@ -84,8 +84,10 @@ class WhisperUIService:
                 language=language,
                 task="transcribe",
                 beam_size=beam_size,
-                vad_filter=True
+                vad_filter=should_enable_vad
             )
+
+            print(info.language)
 
             with open(output_file, "w", encoding="utf-8") as file:
 
