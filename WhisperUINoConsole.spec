@@ -31,6 +31,7 @@ exe = EXE(
     strip=False,
     upx=True,
     console=False,
+    icon='C:\\Users\\clever\\Documents\\python\\faster-whisper\\whisper_ui.ico'
 )
 
 coll = COLLECT(

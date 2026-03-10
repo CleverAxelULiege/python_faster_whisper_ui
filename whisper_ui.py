@@ -91,7 +91,7 @@ class WhisperUI:
         # self.progress_bar.set(self.progress_bar_status["percentage_done"])
     
     def __create_title(self):
-        title = Label(self.root, text="~ WHISPER UI ᕕ( ᐛ )ᕗ", font=("Consolas", 22, "bold"))
+        title = Label(self.root, text="♪ WHISPER UI", font=("Consolas", 22, "bold"))
         title.pack(
             side="top",
             anchor="nw",
